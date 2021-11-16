@@ -1,11 +1,7 @@
 name: Semantic Release
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
-   
+  workflow_dispatch:  
    
 jobs:
   release:
@@ -23,23 +19,7 @@ jobs:
         
     - name: Install dependencies
       run: |
-        python3 -m pip install python-semantic-release  
-        
-    - name: Branch protection OFF
-      uses: octokit/request-action@v2.x
-      with:
-        route: PUT /repos/:repository/branches/main/protection
-        repository: ${{ github.repository }}
-        required_pull_request_reviews: |
-          null
-        required_status_checks: |
-          null
-        enforce_admins: |
-          null
-        restrictions: | 
-          null 
-      env:
-        GITHUB_TOKEN: ${{ secrets.TEST_MERGE }}
+        python3 -m pip install python-semantic-release
            
     - name: Python Semantic Release
       run: |
@@ -48,25 +28,7 @@ jobs:
         semantic-release publish -D commit_author="github-actions <action@github.com>"
       env:
         GH_TOKEN: ${{ secrets.TEST_MERGE }}
-        
-    - name: Branch protection ON
-      uses: octokit/request-action@v2.x
-      with:
-        route: PUT /repos/:repository/branches/main/protection
-        repository: ${{ github.repository }}
-        required_pull_request_reviews: |
-          required_approving_review_count: 1       
-        required_status_checks: |
-          null
-        enforce_admins: |
-            null
-        restrictions: | 
-            null
-      env:
-        GITHUB_TOKEN: ${{ secrets.TEST_MERGE }}
-        
-        
-        
+             
 
 #     - name: Python Semantic Release
 #       uses: relekang/python-semantic-release@master
